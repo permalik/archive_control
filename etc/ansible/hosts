@@ -1,0 +1,5 @@
+[servers]
+arcturus ansible_host=159.65.45.28
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
