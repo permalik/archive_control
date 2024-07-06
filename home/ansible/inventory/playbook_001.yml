@@ -1,6 +1,33 @@
 ---
 - hosts: all
   tasks:
-    - name: Print message
-      debug:
-        msg: Hello Ansible World
+    - name: Execute utility
+      ansible.builtin.shell: go run .
+      args:
+        chdir: /home/tmalik/git/utility
+
+    - name: Teardown legacy archive_ui build
+      ansible.builtin.shell: rm -rf *
+      args:
+        chdir: /var/www/archive_ui/html
+
+    - name: Teardown legacy archive_resume build
+      ansible.builtin.shell: rm -rf *
+      args:
+        chdir: /var/www/archive_resume/html
+
+    - name: Deploy archive_ui
+      ansible.builtin.shell: pnpm build
+      args:
+        chdir: /home/tmalik/git/archive_ui
+
+    - name: Deploy archive_resume
+      ansible.builtin.shell: pnpm build
+      args:
+        chdir: /home/tmalik/git/archive_resume
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
